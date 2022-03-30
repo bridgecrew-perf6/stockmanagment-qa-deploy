@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="" />
+        <meta name="author" content="" />
+        <title>Stock Management</title>
+        <link href="{{ url_for('static', filename='css/styles.css') }}" rel="stylesheet" />
+        <link href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css" rel="stylesheet" crossorigin="anonymous" />
+        <script src="https://cdn.datatables.net/buttons/2.2.2/css/buttons.dataTables.min.css"></script> 
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/js/all.min.js" crossorigin="anonymous"></script>
+        
+    </head>
+    <body class="sb-nav-fixed">
+        {% include "includes/nav.html"%}
+        <div id="layoutSidenav">
+            {% include "includes/sidebar.html"%}
+            <div id="layoutSidenav_content">
+                <!-- main content -->
+                {% block content %}
+                
+                {% endblock %}
+                <!-- end of main content -->
+              {% include "includes/footer.html"%}
+            </div>
+        </div>
+        
+        <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+        <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+        <script src="https://cdn.datatables.net/buttons/2.2.2/js/dataTables.buttons.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+        <script src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.html5.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+        <script src="{{ url_for('static', filename='js/billingpage.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/datatables-demo.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/receipt.js') }}"></script>
+        <script type="text/javascript">
+          $(document).ready( function() {
+                var now = new Date();
+                var day = ("0" + now.getDate()).slice(-2);
+                var month = ("0" + (now.getMonth() + 1)).slice(-2);
+                var today = now.getFullYear()+"-"+(month)+"-"+(day) ;
+            $('#dtpDate').val(today);
+            });
+        </script>
+        <script type="text/javascript">
+          function printDiv(divName) {
+              var printContents = document.getElementById(divName).innerHTML;
+              var originalContents = document.body.innerHTML;
+              document.body.innerHTML = printContents;
+              // document.body.style.marginTop="-45px";
+              window.print();
+              document.body.innerHTML = originalContents;
+          }
+          </script>
+         <script>
+          $(document).on('click', '.reload', function(){
+              window.location = "/allorders";
+            });
+        </script>
+        <!-- role calls -->
+        <script>
+          $(document).on('click', '.add_new_role', function(){
+            var roleName = $('.roleName').val();
+            var description = $('.description').val();
+            $.ajax({
+              url: "/addrole",
+              method: "POST",
+              data:{roleName:roleName, description:description},
+              success:function(b_data){
+                    $('#addNewRoleModal').modal('hide');
+                    if (b_data == 'success') {
+                        window.location = "/allroles";
+                      }
+                    }
+              })
+            });
+        </script>
+        <!-- User calls -->
+        <script>
+          $(document).on('click', '.view_addnewuser_modal', function(){
+            $.ajax({
+               url: "/viewroles",
+               method: "POST",
+               success:function(b_data){
+                  var roles = JSON.parse(b_data);
+                  for (let i = 0; i < roles.length; i++) {
+                    $('#roleName').append('<option value="' + roles[i].id + '">' + roles[i].name + '</option>');
+                    }
+                  
+                }
+              })
+            });
+        </script>
+        <script>
+          $(document).on('click', '.save_newUser_data', function(){
+            
+            var username = $('#username').val();
+            var useremail = $('#userEmail').val();
+            var role = $('#roleName').val();
+            var password = $('#inputPassword').val();
+            $.ajax({
+              url: "/adduser",
+              method: "POST",
+              data:{username:username, useremail:useremail, role:role, password:password},
+              success:function(b_data){
+                $('#addNewUserModal').modal('hide');
+                if (b_data == 'success') {
+                    window.location = "/allusers";
+                }
+              }
+            })
+          });
+        </script>
+         <script>
+          $(document).on('click', '.view_user_data', function(){
+            var user_id = $(this).attr('id');
+            // console.log(user_id)
+            $.ajax({
+               url: "/viewuser",
+               method: "POST",
+               data:{user_id:user_id},
+               success:function(b_data){
+                  var user_data = JSON.parse(b_data);
+                  // console.log(user_data)
+                  $('#editUserModalTitle span').text(user_data[0]['username']);
+                  $('.editusername').val(user_data[0]['username']);
+                  $('.edituserEmail').val(user_data[0]['email']);
+                  $('#editroleName').val(user_data[0]['role_id']);
+                  $('#editroleName').text(user_data[0]['role'])
+                  if(  $('#editroleName').text() == "User" ){
+                    $('#selectroleName').text("Admin")
+                    $('#selectroleName').val("1")
+
+                }
+                else if(  $('#editroleName').text() == "Admin" ){
+                  $('#selectroleName').text("User")
+                    $('#selectroleName').val("2")
+                }
+                  $('.save_editeduser_data').attr('id',user_data[0]['id']);
+               }
+            })
+
+          });
+      </script>
+
+      <script>
+        $(document).on('click', '.save_editeduser_data', function(){
+          var user_id = $(this).attr('id');
+          var username = $('.editusername').val();
+          var email = $('.edituserEmail').val();
+          var role_id = $('.editroleName').val();
+          var password = $('.editPassword').val();
+          if( username == "" ){
+                    alert("Username is required!");
+          }
+          else if( email == "" ){
+              alert( "Email is required!" );
+          }
+          else{
+            $.ajax({
+            url: "/edituser",
+            method: "POST",
+            data:{user_id:user_id, username:username, email:email, role_id:role_id, password:password},
+            success:function(b_data){
+              $('#editUserModal').modal('hide');
+              if (b_data == 'success') {
+                  window.location = "/allusers";
+              }
+            }
+          })
+          }
+          
+        });
+      </script>
+
+      <script>
+        $(document).on('click', '.view_deleteuser_modal', function(){
+          var user_id = $(this).attr('id');
+          $.ajax({
+            url: "/viewuser",
+            method: "POST",
+            data:{user_id:user_id},
+            success:function(b_data){
+                var user_data = JSON.parse(b_data);
+                $('#deleteModalbody span').text(user_data[0]['username']);
+                $('.delete_user_button').attr('id',user_data[0]['id']);
+              }
+            })
+        });
+      </script>
+
+      <script>
+        $(document).on('click', '.delete_user_button', function(){
+          var user_id = $(this).attr('id');
+          $.ajax({
+            url: "/deleteuser",
+            method: "POST",
+            data:{user_id:user_id},
+            success:function(b_data){
+              $('#deletemodal').modal('hide');
+              if (b_data == 'success') {
+                  window.location = "/allusers";
+              }
+            }
+          })
+        });
+      </script>
+      
+     <!-- customer calls -->
+  <script>
+      $(document).on('click', '.view_customer_data', function(){
+        var customer_id = $(this).attr('id');
+        $.ajax({
+            url: "/viewcustomer",
+            method: "POST",
+            data:{customer_id:customer_id},
+            success:function(b_data){
+              $('#exampleModal2').modal('show');
+              var customer_data = JSON.parse(b_data);
+              $('#exampleModalLabel span').text(customer_data[0]['name']);
+              $('#name').val(customer_data[0]['name']);
+              $('#contact').val(customer_data[0]['patient_phone']);
+              $('.save_customer_data').attr('id',customer_data[0]['id']);
+            }
+        })
+
+      });
+  </script>
+
+      <script>
+        $(document).on('click', '.save_customer_data', function(){
+          var customer_id = $(this).attr('id');
+          var customer_name = $('#name').val();
+          var customer_phone = $('#contact').val();
+
+          if ( customer_name == ""){
+              alert( "Customer name is required!" );
+          }
+          else if ( customer_phone == ""){
+            alert( "Customer phone is required!" );
+          }
+          else{
+            $.ajax({
+            url: "/editcustomer",
+            method: "POST",
+            data:{customer_id:customer_id, customer_name:customer_name, customer_phone:customer_phone},
+            success:function(b_data){
+              $('#exampleModal2').modal('hide');
+              if (b_data == 'success') {
+                  window.location = "/allcustomers";
+              }
+            }
+          })
+          }
+
+        });
+      </script>
+
+      <script>
+        $(document).on('click', '.view_customer_delete_data', function(){
+          var customer_id = $(this).attr('id');
+          $.ajax({
+            url: "/viewcustomer",
+            method: "POST",
+            data:{customer_id:customer_id},
+            success:function(b_data){
+                $('#deletemodal').modal('show');
+                var customer_data = JSON.parse(b_data);
+                $('#deleteModalbody span').text(customer_data[0]['name']);
+                $('.delete_customer_data').attr('id',customer_data[0]['id']);
+              }
+            })
+        });
+      </script>
+
+      <script>
+        $(document).on('click', '.delete_customer_data', function(){
+          var customer_id = $(this).attr('id');
+          $.ajax({
+            url: "/deletecustomer",
+            method: "POST",
+            data:{customer_id:customer_id},
+            success:function(b_data){
+              $('#deletemodal').modal('hide');
+              if (b_data == 'success') {
+                  window.location = "/allcustomers";
+              }
+            }
+          })
+        });
+      </script>
+
+      <!-- services CRUD functions -->
+      <script>
+        $(document).on('click', '.add_new_service', function(){
+          var service_name = $('#name').val();
+          var service_charge = $('#price').val();
+          var product_type =  $('.product_type').val();
+          if ( service_name == ""){
+              alert( "Service name is required!" );
+          }
+          else if ( service_charge == ""){
+            alert( "Service Charge is required!" );
+          }
+          else{
+
+            $.ajax({
+            url: "/addnewproduct",
+            method: "POST",
+            data:{product_name:service_name, product_type:product_type, selling_price:service_charge},
+            success:function(b_data){
+              $('#addNewServiceModalLong').modal('hide');
+              if (b_data == 'success') {
+                  window.location = "/allservices";
+              }
+            }
+          })
+          } 
+        });
+      </script>
+      <script>
+        $(document).on('click', '.view_edit_service_modal', function(){
+          var service_id = $(this).attr('id');
+          $.ajax({
+            url: "/viewservice",
+            method: "POST",
+            data:{service_id:service_id},
+            success:function(b_data){
+                $('#editServiceModalLong').modal('show');
+                var service_data = JSON.parse(b_data);
+                $('#editServiceModalTitle span').text(service_data[0]['name']);
+                $('.name').val(service_data[0]['name']);
+                $('.price').val(service_data[0]['price']);
+                $('.save_editedservice_data').attr('id',service_data[0]['id']);
+            }
+          })
+        });
+      </script>
+      <script>
+        $(document).on('click', '.save_editedservice_data', function(){
+          var service_id = $(this).attr('id');
+          var service_name = $('.name').val();
+          var service_charge = $('.price').val();
+          if ( service_name == ""){
+              alert( "Service name is required!" );
+          }
+          else if ( service_charge == ""){
+            alert( "Service Charge is required!" );
+          }
+          else{
+            $.ajax({
+            url: "/editservice",
+            method: "POST",
+            data:{service_id:service_id, service_name:service_name, service_charge:service_charge},
+            success:function(b_data){
+              $('#editServiceModalLong').modal('hide');
+              if (b_data == 'success') {
+                  window.location = "/allservices";
+              }
+            }
+          })
+          }
+          
+        });
+      </script>
+      <script>
+        $(document).on('click', '.view_service_delete_modal', function(){
+          var service_id = $(this).attr('id');
+          $.ajax({
+            url: "/viewservice",
+            method: "POST",
+            data:{service_id:service_id},
+            success:function(b_data){
+                $('#deleteserviceModal').modal('show');
+                var service_data = JSON.parse(b_data);
+                $('#deleteServiceModalbody span').text(service_data[0]['name']);
+                $('.delete_service_data').attr('id',service_data[0]['id']);
+              }
+            })
+        });
+      </script>
+      <script>
+        $(document).on('click', '.delete_service_data', function(){
+          var service_id = $(this).attr('id');
+          $.ajax({
+            url: "/deleteservice",
+            method: "POST",
+            data:{service_id:service_id},
+            success:function(b_data){
+              $('#deleteserviceModal').modal('hide');
+              if (b_data == 'success') {
+                  window.location = "/allservices";
+              }
+            }
+          })
+        });
+      </script>
+      <!-- Product CRUD functions -->
+      <script>
+        $(document).on('click', '.add_new_product_button', function(){
+          var product_name = $('.product_name').val();
+          var product_type = $('.product_type').val();
+          var buying_price = $('.buying_price').val();
+          var selling_price = $('.selling_price').val();
+          var current_quantity = $('.current_quantity').val();
+          var reorder_level = $('.reorder_level').val();
+
+          if( product_name == "" ){
+              alert( "Product name is required!" );
+          }
+          else if( buying_price == "" ){
+              alert( "Buying price is required!" );
+          }
+          else if(selling_price == ""){
+              alert('Selling price is required');
+          }
+          else if(current_quantity == ""){
+              alert('current quantity is required');
+          }
+          else if(reorder_level == ""){
+              alert('reorder level is required');
+          }
+          else {
+                $.ajax({
+                  url: "/addnewproduct",
+                  method: "POST",
+                  data:{product_name:product_name, product_type:product_type,buying_price:buying_price,
+                    selling_price:selling_price,current_quantity:current_quantity, reorder_level:reorder_level},
+                  success:function(b_data){
+                    $('.add-new-product-modal').modal('hide');
+                    if (b_data == 'success') {
+                        window.location = "/allproducts";
+                    }
+                  }
+                })
+        }
+        });
+      </script>
+        <script>
+        $(document).on('click', '.view_edit_product_modal', function(){
+          var product_id = $(this).attr('id');
+          $.ajax({
+            url: "/viewproduct",
+            method: "POST",
+            data:{product_id:product_id},
+            success:function(b_data){
+                // $('.edit-product-modal').modal('show');
+                var product_data = JSON.parse(b_data);
+                $('.editproductheader span').text(product_data[0]['product_name']);
+                $('.product_name').val(product_data[0]['product_name']);
+                $('.buying_price').val(product_data[0]['buy_price']);
+                $('.selling_price').val(product_data[0]['sell_price']);
+                $('.current_quantity').val(product_data[0]['quantity']);
+                $('.reorder_level').val(product_data[0]['reorder_level']);
+                $('.save_editedproduct_info_button').attr('id',product_data[0]['id']);
+            }
+          })
+        });
+      </script>
+        <script>
+        $(document).on('click', '.save_editedproduct_info_button', function(){
+          var product_id = $(this).attr('id');
+          var product_name = $('#product_name').val();
+          var buying_price = $('#buying_price').val();
+          var selling_price = $('#selling_price').val();
+          var current_quantity = $('#current_quantity').val();
+          var reorder_level = $('#reorder_level').val();
+          $.ajax({
+            url: "/editproduct",
+            method: "POST",
+            data:{product_id:product_id, product_name:product_name, buying_price:buying_price, selling_price:selling_price,
+                    current_quantity:current_quantity, reorder_level:reorder_level},
+            success:function(b_data){
+              $('#edit-product-modal').modal('hide');
+              if (b_data == 'success') {
+                  window.location = "/allproducts";
+              }
+            }
+          })
+        });
+      </script>
+        <script>
+        $(document).on('click', '.view_product_delete_modal', function(){
+          var product_id = $(this).attr('id');
+          $.ajax({
+            url: "/viewproduct",
+            method: "POST",
+            data:{product_id:product_id},
+            success:function(b_data){
+                $('#deleteModal').modal('show');
+                var product_data = JSON.parse(b_data);
+                $('#deleteModalbody span').text(product_data[0]['product_name']);
+                $('.delete_product_button').attr('id',product_data[0]['id']);
+              }
+            })
+        });
+      </script>
+      <script>
+        $(document).on('click', '.delete_product_button', function(){
+          var product_id = $(this).attr('id');
+          $.ajax({
+            url: "/deleteproduct",
+            method: "POST",
+            data:{product_id:product_id},
+            success:function(b_data){
+              $('#deleteModal').modal('hide');
+              if (b_data == 'success') {
+                  window.location = "/allproducts";
+              }
+            }
+          })
+        });
+      </script>
+      <script>
+        $(document).on('click', '.add_new_unitem', function(){
+          var item_name = $('.itemName').val();
+          var item_type = $('.product_type').val();
+          var item_desc =  $('.description').val();
+          if ( item_name == ""){
+              alert( "Item name is required!" );
+          }
+          else if ( item_desc == ""){
+            alert( "Description is required!" );
+          }
+          else{
+
+            $.ajax({
+            url: "/additem",
+            method: "POST",
+            data:{item_name:item_name, item_type:item_type, item_desc:item_desc},
+            success:function(b_data){
+              $('#additemModal').modal('hide');
+              if (b_data == 'success') {
+                  window.location = "/allunavailableitmes";
+              }
+            }
+          })
+          } 
+        });
+        </script>
+        <script>
+        $(document).on('click', '.view_item_delete_modal', function(){
+          var item_id = $(this).attr('id');
+          $.ajax({
+            url: "/viewunavailableitem",
+            method: "POST",
+            data:{item_id:item_id},
+            success:function(b_data){
+                $('#deleteModal').modal('show');
+                var item_data = JSON.parse(b_data);
+                $('#deleteModalbody span').text(item_data[0]['name']);
+                $('.delete_button').attr('id',item_data[0]['id']);
+              }
+            })
+        });
+        </script>
+        <script>
+        $(document).on('click', '.delete_button', function(){
+          var item_id = $(this).attr('id');
+          $.ajax({
+            url: "/removeitem",
+            method: "POST",
+            data:{item_id:item_id},
+            success:function(b_data){
+              $('#deleteModal').modal('hide');
+              if (b_data == 'success') {
+                  window.location = "/allunavailableitmes";
+              }
+            }
+          })
+        });
+        </script>
+        <script>
+        $( window ).on( "load", function() {
+          
+          $('.mytable tr').each(function() {
+              var reorder = $(this).find(".reorderTd").html();  
+              var quantity = $(this).find(".quantityTd").html();
+              if (parseFloat(quantity) === 0){
+                $(this).find(".btn").removeClass('btn-warning').addClass('btn-danger');
+                $(this).find(".btn").text('Out-of-stock');
+              }
+          });
+        });
+        </script>
+        <!-- delete Transaction calls -->
+        <script>
+          $(document).on('click', '.view_bill_delete_modal', function(){
+            var order_id = $(this).attr('id');
+            $.ajax({
+              url: "/viewbilldetails",
+              method: "POST",
+              data:{order_id:order_id},
+              success:function(b_data){
+                  var bill_data = JSON.parse(b_data);
+                  $('#deleteModalbody span').text(bill_data[0]['name']);
+                  $('.delete_bill_button').attr('id',bill_data[1]['bill_id']);
+                }
+              })
+          });
+          </script>
+          <script>
+          $(document).on('click', '.delete_bill_button', function(){
+                var order_id = $(this).attr('id');
+                $.ajax({
+                  url: "/deletebill",
+                  method: "POST",
+                  data:{order_id:order_id},
+                  success:function(b_data){
+                    $('#deleteModal').modal('hide');
+                    if (b_data == 'success') {
+                        window.location = "/allorders";
+                    }
+                  }
+                })
+            });
+          </script>
+    </body>
+</html>

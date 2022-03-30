@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="" />
+        <meta name="author" content="" />
+        <title>Stock Management</title>
+        <link href="{{ url_for('static', filename='css/styles.css') }}" rel="stylesheet" />
+        <link href="{{ url_for('static', filename='css/report.css') }}" rel="stylesheet" />
+
+        <link href="https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap4.min.css" rel="stylesheet" crossorigin="anonymous" />
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/js/all.min.js" crossorigin="anonymous"></script>
+        
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css" />
+        <link rel="stylesheet" href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css" >
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script> 
+    </head>
+    <body class="sb-nav-fixed">
+        {% include "includes/nav.html"%}
+        <div id="layoutSidenav">
+            {% include "includes/sidebar.html"%}
+            <div id="layoutSidenav_content">
+                <!-- main content -->
+                {% block content %}
+                
+                {% endblock %}
+                <!-- end of main content -->
+              {% include "includes/footer.html"%}
+            </div>
+        </div>
+    </div>
+   
+       <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+        <script src="{{ url_for('static', filename='js/scripts.js') }}"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
+        <script src="https://cdn.datatables.net/buttons/2.2.2/js/dataTables.buttons.min.js"></script>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+        <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script> -->
+        <script src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.html5.min.js"></script>
+        <script>
+            $(document).ready(function() {
+     $.fn.dataTable.ext.search.push(
+        function (settings, data, dataIndex) {
+            var min = $('#datepicker_from').datepicker('getDate');
+            var max = $('#datepicker_to').datepicker('getDate');
+
+            var startDate = new Date($.trim(data[0])); //here change column value if you have different table structure
+            if (min == null && max == null) return true;
+            if (min == null && startDate <= max) return true;
+            if (max == null && startDate >= min) return true; 
+            if (startDate <= max && startDate >= min) return true;
+            return false;
+        }
+    );
+
+    $('#datepicker_from').datepicker({ onSelect: function () { table.draw(); }, changeMonth: true, changeYear: true });
+    $('#datepicker_to').datepicker({ onSelect: function () { table.draw(); }, changeMonth: true, changeYear: true });
+    var table = $('#dataTable').DataTable();
+
+    // Event listener to the two range filtering inputs to redraw on input
+    $('#datepicker_from,#datepicker_to').change(function () {
+        table.draw();
+
+    });
+
+    $(".clear-date-filter").on("click", function() {
+     $('#datepicker_from').val("").datepicker("update");
+     $('#datepicker_to').val("").datepicker("update");
+    });
+
+} );
+
+$('#dataTable').DataTable( {
+        dom: 'Bfrtip',
+        buttons: [
+            'excelHtml5',
+        ]
+    } );
+        </script>
+      
+       
+    </body>
+    </html>

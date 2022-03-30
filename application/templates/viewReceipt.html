@@ -1,0 +1,92 @@
+{% extends "layout.html" %}
+{% block content %}
+<main>
+    <div class="container-fluid">
+        <div id="printableArea">
+            <div class="card">
+              <!-- ReceiptReport start -->
+              <div class="card-header">
+                Receipt
+              </div>
+              <div class="card-body">
+                <section class="content">
+                    <!-- Alert Message -->
+                      <div class="row">
+                        <div class="col-sm-12">
+                            <div class="panel panel-bd">
+
+                                    <div class="panel-body">
+                                        <div class="row mb-4">
+                                            <div class="col-sm-6">
+                                                <h5 class="mb-3">From:</h5> 
+                                                <div>Legendary Designs LTD</div>                                           
+                                                <div>Thika road</div>
+                                                <div>Email: legendarydesigns@gmail.com</div>
+                                                <div>Phone: 0708-282-9117</div>
+                                            </div>
+                                            <div class="col-sm-6">
+                                               <h5 class="mb-3">To:</h5> 
+                                                <div><strong>Date:</strong> {{order.bill_date.date()}}</div>
+                                                <div><strong>Customer:</strong> {{Customerdetails.name}}</div>                                       
+                                                <div><strong>Contact:</strong><span> 0{{Customerdetails.patient_phone}}</span></div>
+                                                <div><strong>Payment Type: </strong><span> {{order.payment_type}}</span></div>
+                                                <div></div>
+                                            </div>
+                                        </div>
+                                        <div class="table-responsive m-b-20">
+                                            <table class="table table-striped table-bordered">
+                                                <thead>
+                                                    <tr>
+                                                        <th class="text-center">Item</th>
+                                                        <th class="text-center">Item Type</th>
+                                                        <th class="text-center">Quantity</th>                          
+                                                        <th class="text-center">Sale Price</th>
+                                                        <th class="text-center">Amount</th>
+                                                    </tr>
+                                                </thead>
+
+                                                <tbody>
+                                                    {% for product in purchased_items %}
+                                                    <tr>
+                                                        <td class="text-center"><div><strong>{{product[0]}}</strong></div></td>
+                                                        <td align="center">{{product[1]}}</td>
+                                                        <td align="center">{{product[2]}}</td>
+                                                        <td align="right">{{product[3]}}</td>
+                                                        <td align="right">{{product[4]}}</td>
+                                                    </tr>
+                                                    {% endfor %}
+                                                </tbody>
+                                                <tfoot>
+                                                  <tr>
+                                                    <td colspan="4"  style="text-align:right;"><b>SubTotal:</b></td>
+                                                    <td class="text-right">{{order.sub_total}}
+                                                    </td>
+                                                   
+                                                </tr>
+                                                <tr>
+                                                  <td colspan="4"  style="text-align:right;"><b>Paid Amount:</b></td>
+                                                  <td class="text-right">{{order.payment_amount}}
+                                                  </td>
+                                              </tr>
+                                              
+                                                </tfoot>
+                                            </table>
+                                        </div>
+                                       
+                                    </div>
+                                
+                            </div>
+                        </div>
+                    </div>
+                </section> 
+            </div>
+              <!-- receipt end  -->
+            </div>
+        </div>
+        <div class="panel-footer text-right">
+            <a  class="btn btn-danger" href="{{url_for('AllOrders')}}">Cancel</a>
+            <button  class="btn btn-success" onclick="printDiv('printableArea')"><span class="fa fa-print"></span>Print</button>
+        </div>
+    </div>
+</main>
+{% endblock %}

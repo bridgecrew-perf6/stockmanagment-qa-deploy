@@ -1,0 +1,1 @@
+total_expenses_amount_grouped=TrackExpense.query.with_entities(TrackExpense.expense_type,TrackExpense.amount,func.sum(TrackExpense.amount).label('Total_spent')).group_by(TrackExpense.expense_type).all()

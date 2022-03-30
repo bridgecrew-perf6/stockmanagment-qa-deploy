@@ -1,0 +1,57 @@
+<div id="layoutSidenav_nav">
+    <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
+        <div class="sb-sidenav-menu">
+            <div class="nav">
+                <div class="sb-sidenav-menu-heading">Core Features</div>
+                <a class="nav-link collapsed" href="{{url_for('Billing')}}" >
+                    <div class="sb-nav-link-icon"><i class="fa fa-calculator"></i></div>
+                    Billing
+                </a>
+               
+                <a class="nav-link collapsed" href="{{url_for('allCustomers')}}">
+                    <div class="sb-nav-link-icon"><i class="fa fa-address-card"></i></div>
+                    Customers
+                </a>
+                <a class="nav-link" href="{{url_for('allProducts')}}">
+                    <div class="sb-nav-link-icon"><i class="fas fa-book-open"></i></div>
+                    Products
+                </a>
+                <a class="nav-link" href="{{url_for('allServices')}}" >
+                    <div class="sb-nav-link-icon"><i class="fa fa-bars"></i></div>
+                    Services
+                </a>
+                <a class="nav-link collapsed" href="{{url_for('UnavailableItmes')}}">
+                    <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
+                    Unavailble items
+                </a>
+                <div class="sb-sidenav-menu-heading">REPORTS</div>
+                <a class="nav-link collapsed" href="{{url_for('AllOrders')}}">
+                    <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
+                    Transactions
+                </a>
+                <a class="nav-link collapsed" href="{{url_for('ServiceCharged')}}">
+                    <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
+                    Services Charged
+                </a>
+                <a class="nav-link collapsed" href="{{url_for('ProductSold')}}">
+                    <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
+                    Products Sold
+                </a>
+                {% if g.user.role.name == 'Admin' or g.user.role.name == 'SuperUser'%}
+                <a class="nav-link collapsed" href="{{url_for('StockReport')}}">
+                    <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
+                    Inventory Report
+                </a>
+                {% endif %}
+                <a class="nav-link collapsed" href="{{url_for('ReorderLevelReport')}}">
+                    <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
+                    Reorder Level Report
+                </a>
+            </div>
+        </div>
+        <div class="sb-sidenav-footer">
+            <div class="small">Logged in as:{{username}}</div>
+            
+        </div>
+    </nav>
+</div>

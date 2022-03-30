@@ -1,0 +1,53 @@
+<div class="card mb-4">
+    <div class="card-header">
+        <div class="d-flex justify-content-between  mb-1">
+            <div class="p-2 "><i class="fas fa-table mr-1"></i>
+                All Orders
+            </div>
+          </div>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table border="0" cellspacing="5" cellpadding="5">
+                <thead>
+                    <tr>
+                        <th>Bill Date</th>
+                        <th>Customer Name</th>
+                        <th>Payment Amount</th>
+                        <th>Payment Type</th>
+                        <th>Completed By</th>
+                       
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                
+                <tbody>
+                    <!-- get Json data from backend and populate the table -->
+                    {% for order in orders %}
+                    <tr>
+                        <td>{{ order[0].bill_date.date()}}</td>
+                        <td>{{ order[1].name }}</td>
+                        <td>{{ order[0].payment_amount }}</td>
+                        <td>{{ order[0].payment_type}}</td>
+                        <td>{{ order[0].inserted_by}}</td>
+                        <td>
+                             <!-- START DROPDOWN BUTTON -->
+                             <div class="dropdown">
+                                <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                  Action Options
+                                </button>
+                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                  <a class="dropdown-item " href="#" id="{{order.id}}" data-toggle="modal" data-target=".edit-product-modal">View Order Details</a>
+                                  <a class="dropdown-item " href="#" id="{{order.id}}"  data-toggle="modal" data-target="#deleteModal">Delete Order</a>
+                                </div>
+                            </div>
+                              <!-- END DROPDOWN BUTTON -->
+                        </td>
+                       
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

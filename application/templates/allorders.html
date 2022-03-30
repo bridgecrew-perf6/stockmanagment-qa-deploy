@@ -1,0 +1,74 @@
+{% extends "reportlayout.html" %}
+
+
+{% block content %}
+<main>
+    <div class="container pt-5">
+        <div class="total-filter">
+            <div class="search-heading">All Sales</div>
+          <p id="date_filter">       
+                <span id="date-label-from" class="date-label">Start Date: 
+                </span><input class="date_range_filter date" type="text" 
+                id="datepicker_from" />
+                        <span id="date-label-to" 
+                class="date-label">End Date:</span><input class="date_range_filter
+                date" type="text" id="datepicker_to" />
+                            <button class="btn btn-default clear-date-filter">Clear Filter</button>
+          </p>
+        </div>
+        <table class="table" id="dataTable">
+            <thead>
+                <tr>
+                    <th>Bill Date</th>
+                    <th>Customer Name</th>
+                    <th>Bill Amount</th>
+                    <th>Payment Amount</th>
+                    <th>Payment Type</th>
+                    <th>Completed By</th>
+                   
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- get Json data from backend and populate the table -->
+                {% for order in orders %}
+                <tr>
+                    <td>{{ order[0].bill_date.date()}}</td>
+                    <td>{{ order[1].name }}</td>
+                    <td>{{ order[0].sub_total }}</td>
+                    <td>{{ order[0].payment_amount }}</td>
+                    <td>{{ order[0].payment_type}}</td>
+                    <td>{{ order[0].inserted_by}}</td>
+                    <td>
+                         <!-- START DROPDOWN BUTTON -->
+                         <div class="dropdown">
+                            <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                              Action Options
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                              <!-- <a class="dropdown-item " href="{{url_for('ReceiptReport')}}" >View Order Details</a> -->
+                              <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bd-example-modal-xl">Extra large modal</button>
+                              <a class="dropdown-item " href="#">Delete Order</a>
+                            </div>
+                        </div>
+                          <!-- END DROPDOWN BUTTON -->
+                          <!-- Start view order model -->
+
+
+                          <div class="modal fade bd-example-modal-xl" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-xl">
+                              <div class="modal-content">
+                                ...
+                              </div>
+                            </div>
+                          </div>
+                          <!-- end of view model -->
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</main>
+
+{% endblock %}

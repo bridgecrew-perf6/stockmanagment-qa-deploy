@@ -1,0 +1,63 @@
+{% extends "layout.html" %}
+
+
+{% block content %}
+   <main>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-7">
+                <div class="card border-1 rounded-lg mt-10">
+                    <div class="card-header"><h4 class="text-center font-weight-light my-1">Daily Expense Tracker</h4></div>
+                    <div class="card-body">
+                        <div class="container">
+                            {% for category, message in get_flashed_messages(with_categories=true)%}
+                                <div class="alert alert-{{ category }}">{{message}}</div>
+                                {% endfor %}
+                          </div>
+                        <form action="/addexpense" method="post">
+                            <div class="form-row">
+                                <div class="col-md-6">
+                                    <div class="form-group"><label class="small mb-1" >Date</label><input class="datepicker form-control" type="date" size="50" name="expense_date" id="dtpDate" required="" value="" tabindex="1"></div>
+                                </div>
+                    
+                            </div>
+                            <div class="form-row">
+                                
+                                <div class="col-md-6">
+                                    <div class="form-group"><label class="small mb-1">Expense Type</label>
+                                        <select class="form-control" name="expense_type" id="expense_type" >
+                                        <option value="BreakFast">BreakFast</option>
+                                        <option value="Lucnch">Lunch</option>
+                                        <option value="Super">Super</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                                <div class="form-row">
+                                    <div class="col-md-6">
+                                        <div class="form-group"><label class="small mb-1" >Amount</label><input  class="form-control"  type="text" name="amount" required/></div>
+                                    </div>
+  
+                                </div>
+                                <div class="form-row">
+                                    <div class="col-md-6">
+                                        <div class="form-group"><label class="small mb-1" for="inputEmailAddress">Description</label><input class="form-control py-4" id="inputEmailAddress" type="text" name="description"  placeholder="Enter Description " /></div>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="col-md-4">
+                                        <div class="form-group mt-4 mb-0"><a class="btn btn-warning " href="{{url_for('dashboard')}}">Cancel</a></div>
+                                    </div>
+                                <div class="col-md-4">
+                                    <div class="form-group mt-4 mb-0"><input type="submit" style="color:blue" value="Save"></div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+   </main>
+{% endblock %}

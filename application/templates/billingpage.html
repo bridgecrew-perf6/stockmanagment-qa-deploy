@@ -1,0 +1,130 @@
+{% extends "layout.html" %}
+{% block content %}
+<main>
+      <div class="container-fluid">
+            <div class="container">
+                    {% with messages = get_flashed_messages(with_categories=true) %}
+                        {% if messages %}
+                            {% for category, message in messages %}
+                                <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                                    <span>{{ message }}</span>
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">×</span>
+                                    </button>
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                    {% endwith %}             
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-body">
+                    <form class="needs-validation" action="" novalidate  id="insert_purchase" name="" enctype="multipart/form-data"  accept-charset="utf-8">
+                            <div class="panel-body customerdetails">
+                                <div class="row">
+                                    <div class="col-sm-6" id="payment_from_1">
+                                        <div class="form-group row">
+                                            <label for="customer_name" class="col-sm-3 col-form-label"><strong>Customer Name </strong><i class="text-danger">*</i></label>
+                                            <div class="col-sm-6">
+                                                    <input type="text"  class="form-control customer_name"  tabindex="1" list="customers" />
+                                                    <datalist id="customers">
+                                                        {% for customer in customers %}
+                                                        <option data-value="{{customer.id}}" value="{{customer.name}}"></option>
+                                                        {% endfor %}
+                                                    </datalist>
+                                            </div>  
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6" id="payment_from">
+                                        <div class="form-group row">
+                                            <label for="payment_type" class="col-sm-3 col-form-label"><strong>Payment Type</strong><i class="text-danger">*</i></label>
+                                            <div class="col-sm-6">
+                                                <select name="paytype" id="paytype" class="form-control payment_type" tabindex="4"  >
+                                                    <option value="Cash">Cash Payment</option>
+                                                    <option value="Mpesa">Mpesa Payment</option> 
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <div class="form-group row">
+                                            <label for="date" class="col-sm-3 col-form-label"><strong>Purchase Date</strong> <i class="text-danger">*</i></label>
+                                            <div class="col-sm-6">
+                                        <input class="form-control payment_date" type="date" size="50"  id="dtpDate" required value="" tabindex="2" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        
+                      <hr>
+                      <div class="table-responsive" style="margin-top: 10px">
+                        <table class="table table-bordered table-hover" id="billingtable">
+                          <thead>
+                            <tr>
+                              <th scope="col">Item Name</th>
+                              <th scope="col">In-Stock</th>
+                              <th scope="col">Quantity</th>
+                              <th scope="col">Unit Cost</th>
+                              <th scope="col">Total</th>
+                              <th scope="col">Action</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr style="height:0px;" class="item-row">
+                              <td>
+                                <input type="text" name="product_name" class="form-control product_input"  list="products" >
+                                <datalist id="products">
+                                    {% for product in products %}
+                                    <option data-value="{{product.id}}" value="{{product.product_name}}"></option>
+                                    {% endfor %}
+                                </datalist>
+                              </td>
+                              <td><input type="text" class="form-control current_qty" readonly ></td>
+                              <td><input type="number" class="form-control dispensequantity"></td>
+                              <td><input type="number" readonly class="form-control selling_price" ></td>
+                              <td ><input type="number" class="form-control total" readonly></td>
+                              <td>
+                                  <input type="button" value="Add Row" class="btn btn-primary btn-sm"  onclick="addRow()">
+                                <!-- <button type="button" class="btn btn-primary btn-sm"  onclick="addRow()">Add Row</button> -->
+                              </td>
+                            </tr>
+                          </tbody>
+                          <tfoot>
+                            <tr>
+                              <td colspan="4"  style="text-align:right;"><b>SubTotal:</b></td>
+                              <td class="text-right">
+                                   <input type="number"  class="form-control subtotal" id="total_sum_value" value=0 readonly="readonly" />
+                              </td>
+                             
+                          </tr>
+                          <tr>
+                            <td colspan="4"  style="text-align:right;"><b>Paid Amount:</b></td>
+                            <td class="text-right">
+                                 <input type="number"  class="form-control payment"  />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="4"  style="text-align:right;"><b>Change:</b></td>
+                            <td class="text-right">
+                                 <input type="number"  class="form-control change"  value="0" readonly/>
+                            </td>    
+                        </tr>
+                        <tr>
+                            <td colspan="4"  style="text-align:right;"></td>
+                            <td class="text-center">
+                                <input type="button" value="Finalize Sale" class="btn btn-warning sendData">
+                            </td>
+                        </tr>
+                          </tfoot>
+                        </table>
+                      </div>
+                    </form>
+                </div>
+            </div>
+    <!-- end of container div -->
+    </div>
+</main>
+{% endblock %}

@@ -1,0 +1,56 @@
+{% extends "layout.html" %}
+
+
+{% block content %}
+<div class="bg-gray text-white">
+   <main>
+    <div class="container centered">
+        <div class="row justify-content-center">
+            <div class="col-lg-7 shadow">
+                <div class="card border-1 rounded-lg mt-10">
+                    <div class="card-header" style="background-color:DodgerBlue;">
+                        <h3 class="text-center font-weight-bold my-4" >Create User Account</h3>
+                    </div>
+                    <div class="card-body">
+                        <form action="/addUser" method="post">
+                            <div class="row mb-3">
+                                <label for="inputusername" class="col-sm-4 col-form-label text-dark">Username:</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" name="username" placeholder="Enter Email" required>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <label for="inputEmail" class="col-sm-4 col-form-label text-dark">Email :</label>
+                                <div class="col-sm-10">
+                                    <input type="email" class="form-control" name="email" placeholder="Enter Email" required>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <label for="inputPassword" class="col-sm-4 col-form-label text-dark">Password:</label>
+                                <div class="col-sm-10">
+                                    <input type="password" class="form-control" name="password" id="inputPassword" placeholder="Password" required>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                
+                                    <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="checkRemember" onclick="showPassword()">
+                                            <label class="form-check-label text-dark" for="checkRemember">Show Password</label>
+                                    </div>
+                                
+                            </div>
+                            <div class="row">
+                                
+                                    <button type="submit" class="btn btn-primary">Add New User</button>
+                                
+                            </div>
+                        
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+   </main>
+</div>
+{% endblock %}
