@@ -99,7 +99,7 @@ def add_user():
     if request.method == 'POST':
         hashed_password= generate_password_hash(request.form['password'], method='sha256')
         newuser = User(username = request.form['username'] ,email = request.form['useremail'], password = hashed_password,\
-            role_id = int(request.form['role']))
+            user_role_id = int(request.form['role']))
         db.session.add(newuser)
         try:
             db.session.commit()
@@ -120,7 +120,7 @@ def viewUser():
         userobj['id'] = user.id
         userobj['username'] = user.username
         userobj['email'] = user.email
-        userobj['role_id'] =  user.role_id
+        userobj['role_id'] =  user.user_role_id
         userobj['role'] = user.role.name
         userDataArray.append(userobj)
         return json.dumps(userDataArray)
@@ -137,8 +137,8 @@ def editUser():
         if userToEdit.password:
             hashed_password= generate_password_hash(request.form['password'], method='sha256')
             userToEdit.password = hashed_password
-        if userToEdit.role_id:
-            userToEdit.role_id = request.form['role_id']
+        if userToEdit.user_role_id:
+            userToEdit.user_role_id = request.form['role_id']
         db.session.add(userToEdit)
         db.session.commit() 
         flash(f'{userToEdit.username}  has been updated!', 'success')
