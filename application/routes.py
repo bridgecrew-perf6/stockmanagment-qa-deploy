@@ -65,14 +65,16 @@ def addRole():
 # @login_required
 def allUsers():
     """ All system users """
-    if g.user.role.name == 'Admin':
-        users = db.session.query(User).filter(~User.user_role_id.in_([1])).all()
-        return render_template("allusers.html", users = users)
-    elif  g.user.role.name == 'SuperUser':
-        users = User.query.filter_by(status = True).all()
-        return render_template("allusers.html", users = users)
-    else:
-        return render_template("allusers.html")
+    users = User.query.filter_by(status = True).all()
+    return render_template("allusers.html", users = users)
+    # if g.user.role.name == 'Admin':
+    #     users = db.session.query(User).filter(~User.user_role_id.in_([1])).all()
+    #     return render_template("allusers.html", users = users)
+    # elif  g.user.role.name == 'SuperUser':
+    #     users = User.query.filter_by(status = True).all()
+    #     return render_template("allusers.html", users = users)
+    # else:
+    #     return render_template("allusers.html")
 
 @app.route("/viewroles", methods=["POST"])
 # @login_required
