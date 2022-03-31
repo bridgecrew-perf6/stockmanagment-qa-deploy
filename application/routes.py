@@ -66,7 +66,7 @@ def addRole():
 def allUsers():
     """ All system users """
     if g.user.role.name == 'Admin':
-        users = db.session.query(User).filter(~User.role_id.in_([1])).all()
+        users = db.session.query(User).filter(~User.user_role_id.in_([1])).all()
         return render_template("allusers.html", users = users)
     elif  g.user.role.name == 'SuperUser':
         users = User.query.filter_by(status = True).all()
