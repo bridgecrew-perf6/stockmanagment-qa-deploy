@@ -27,7 +27,7 @@ class User(db.Model, UserMixin):
     password = db.Column(db.String(255), nullable=False)
     status = db.Column(db.Boolean(), default= True)
     created_on = db.Column(db.Date(), default=datetime.utcnow)
-    role_id = db.Column(db.Integer, db.ForeignKey('role.id'),nullable=False)
+    use_role_id = db.Column(db.Integer, db.ForeignKey('role.id'),nullable=False)
 
 class Customer(db.Model):  
     """ Customers model """  
