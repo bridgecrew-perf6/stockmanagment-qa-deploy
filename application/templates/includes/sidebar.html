@@ -37,12 +37,12 @@
                     <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
                     Products Sold
                 </a>
-                {% if g.user.role.name == 'Admin' or g.user.role.name == 'SuperUser'%}
+               
                 <a class="nav-link collapsed" href="{{url_for('StockReport')}}">
                     <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
                     Inventory Report
                 </a>
-                {% endif %}
+              
                 <a class="nav-link collapsed" href="{{url_for('ReorderLevelReport')}}">
                     <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
                     Reorder Level Report
@@ -50,7 +50,7 @@
             </div>
         </div>
         <div class="sb-sidenav-footer">
-            <div class="small">Logged in as:{{username}}</div>
+            <div class="small">Logged in as:</div>
             
         </div>
     </nav>

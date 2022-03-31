@@ -5,12 +5,12 @@
         <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" id="userDropdown" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-user fa-fw"></i> {{g.user.username}}</a>
             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
-                {% if g.user.role.name == 'SuperUser' or g.user.role.name == 'Admin'%}
+                
                 <a class="dropdown-item" href="{{url_for('allUsers')}}"></i>All users</a>
-                {% endif %}
-                {% if g.user.role.name == 'SuperUser'%}
+                
+                
                 <a class="dropdown-item" href="{{url_for('allRoles')}}"></i>All Roles</a>
-                {% endif %}
+               
                 <div class="dropdown-divider"></div>
                 <a class="dropdown-item" href="{{url_for('logout')}}">Logout</a>
             </div>
