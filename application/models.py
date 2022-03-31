@@ -16,7 +16,7 @@ login_manager.login_view='login'
 class Role(db.Model):
     id = db.Column(db.Integer(), primary_key=True)
     name = db.Column(db.String(80), unique=True, nullable=False)
-    description = db.Column(db.Text(255))
+    description = db.Column(db.Text())
     status = db.Column(db.Boolean(), default= True)
     user = db.relationship('User', backref='role', lazy = True)
 
