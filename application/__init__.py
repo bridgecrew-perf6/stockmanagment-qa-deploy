@@ -8,8 +8,8 @@ app=Flask(__name__)
 
 # import your config file
 # app.config.from_object("config.Config")
-app.config['SQLALCHEMY_DATABASE_URI'] =os.environ.get('DATABASE_URL')
-app.config['SECRET_KEY'] =os.environ.get('SECRET')
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://jkktzcsikaxquq:0372341fb2bc6d87f2f6ea288b655d7ff521bd9b772a5b2d04d3662b3fb21e76@ec2-3-229-161-70.compute-1.amazonaws.com:5432/d4f8s3lohg5na0'
+app.config['SECRET_KEY'] = 'Ol8sSHeqgWsv5_WueuC4og'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 # instatiate SQLAlchemy and pass the app
