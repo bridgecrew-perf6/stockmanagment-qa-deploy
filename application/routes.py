@@ -673,7 +673,7 @@ def ServiceCharged():
     servicescharged = db.session.query(Product.product_name, Product.product_type,\
         func.sum(OrderItems.quantity), OrderItems.sell_price,func.sum(OrderItems.total_amount)).\
     join(Product.orderitems_id).filter(and_(OrderItems.status == True,Product.product_type == 'Service')).\
-        group_by(Product.product_name,Product.product_type).order_by(func.sum(OrderItems.total_amount).desc()).all()
+        group_by(Product.product_name,Product.product_type,OrderItems.sell_price).order_by(func.sum(OrderItems.total_amount).desc()).all()
     return render_template("servicechargedReport.html", servicescharged = servicescharged) 
 
 # all sold product
@@ -684,7 +684,7 @@ def ProductSold():
     productssold = db.session.query(Product.product_name, Product.product_type,\
         func.sum(OrderItems.quantity), OrderItems.sell_price,func.sum(OrderItems.total_amount)).\
     join(Product.orderitems_id).filter(and_(OrderItems.status == True,Product.product_type == 'Product')).\
-        group_by(Product.product_name,Product.product_type).all()
+        group_by(Product.product_name,Product.product_type,OrderItems.sell_price).all()
     return render_template("allproductsoldReport.html", productssold = productssold) 
 
 @app.route("/reoderlevelreport")
