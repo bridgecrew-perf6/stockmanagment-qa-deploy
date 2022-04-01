@@ -1,4 +1,5 @@
 # import the Flask class
+import os
 from flask import Flask
 from flask_sqlalchemy import  SQLAlchemy
 
@@ -6,7 +7,10 @@ from flask_sqlalchemy import  SQLAlchemy
 app=Flask(__name__)
 
 # import your config file
-app.config.from_object("config.Config")
+# app.config.from_object("config.Config")
+app.config['SQLALCHEMY_DATABASE_URI'] =os.environ.get('DATABASE_URL')
+app.config['SECRET_KEY'] =os.environ.get('SECRET')
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 # instatiate SQLAlchemy and pass the app
 db=SQLAlchemy(app)
