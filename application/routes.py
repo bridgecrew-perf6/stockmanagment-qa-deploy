@@ -715,6 +715,8 @@ def ReceiptReport(order_id):
     return render_template("viewReceipt.html", purchased_items = purchased_items, order_id = order_id,\
         order = order, Customerdetails = Customerdetails)
 
+# Create custom Error Pages 404 0r 500
+
 #logout
 @app.route('/logout')
 @login_required
